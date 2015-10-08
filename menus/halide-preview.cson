@@ -1,0 +1,24 @@
+# Copyright 2015 Adobe Systems Incorporated
+# All Rights Reserved.
+
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle Halide Preview'
+      'command': 'atomic-halide:preview'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Atomic Halide'
+      'submenu': [
+        {
+          'label': 'Toggle Preview'
+          'command': 'atomic-halide:preview'
+        }
+      ]
+    ]
+  }
+]

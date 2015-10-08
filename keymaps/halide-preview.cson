@@ -1,0 +1,5 @@
+# Copyright 2015 Adobe Systems Incorporated
+# All Rights Reserved.
+
+'atom-workspace':
+  'ctrl-alt-o': 'atomic-halide:preview'

@@ -1,0 +1,42 @@
+build\$(STEM).dll: build\$(STEM).obj build\$(STEM).def build\tmp\error_handler.obj
+	$(CXX) build\tmp\error_handler.obj build\$(STEM).obj /link /NODEFAULTLIB:LIBCMT msvcrt.lib /FORCE:MULTIPLE /DLL /out:build\$(STEM).dll /def:build\$(STEM).def
+
+build\tmp\error_handler.obj: error_handler.c
+	$(CXX) /c /EHsc error_handler.c /Fo:$@
+
+build\tmp:
+	mkdir build\tmp
+
+build\tmp\$(STEM)_fn.cpp: $(STEM).cpp NMakefile build\tmp
+	echo #include "Halide.h" > $@
+	echo using namespace Halide; >> $@
+	echo Func getFunction() { >> $@
+	echo Func result; >> $@
+	type $(STEM).cpp >> $@
+	echo return result; >> $@
+	echo } >> $@
+
+build\$(STEM).def:
+	echo LIBRARY $(STEM) > $@
+	echo EXPORTS >> $@
+	echo	render @1 >> $@
+	echo	render_metadata @2 >> $@
+
+build\tmp\$(STEM)_fn.obj: build\tmp\$(STEM)_fn.cpp
+	$(CXX) /c /EHsc /I $(HALIDE_PATH)\include build\tmp\$(STEM)_fn.cpp /Fo:$@
+
+build\tmp\main.obj: main.cpp
+	$(CXX) /c /EHsc /I $(HALIDE_PATH)\include main.cpp /Fo:$@
+
+build\tmp\Halide.dll: $(HALIDE_PATH)\Release\Halide.dll
+	copy $(HALIDE_PATH)\Release\Halide.dll build\tmp
+
+build\tmp\mk_$(STEM).exe: build\tmp\$(STEM)_fn.obj build\tmp\main.obj build\tmp\Halide.dll
+	$(CXX) /EHsc /I $(HALIDE_PATH)\include /Fe:$@ $(HALIDE_PATH)\Release\Halide.lib build\tmp\$(STEM)_fn.obj build\tmp\main.obj
+
+build\$(STEM).obj: build\tmp\mk_$(STEM).exe
+	build\tmp\mk_$(STEM) build\$(STEM) render
+	move build\$(STEM).o $@
+
+clean:
+	del /q /s /f build

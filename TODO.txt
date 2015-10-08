@@ -1,0 +1,14 @@
+- loading indicator
+- make preview dimensions configurable on the fly
+- add pluggable support for mapping input and output buffers other than 8-bit RGB.
+- support inputs that have different sizes than outputs
+- allow multiple outputs, warn about those that cannot be handled instead of bailing
+- revisit possibility of doing rendering async (off thread)
+- add options to stretch/fit/fill image inputs
+- consider switching to using Halide Generators instead of the simplistic and hard coded building template
+- capture and show print output produced during the filter's execution
+- provide an easy way to view the lowered statement or loop nest outputs
+
+Windows
+- incorporate configuration discovery to eliminate hard coded tool paths
+

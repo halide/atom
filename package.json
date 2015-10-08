@@ -1,0 +1,23 @@
+{
+  "name": "atomic-halide",
+  "main": "./lib/atomic-halide",
+  "version": "0.1.0",
+  "description": "package for live coding Halide imaging language programs",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "atomic-halide:preview"
+  },
+  "repository": "https://git.corp.adobe.com/adl/atomic-halide",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+	"q": "1.4.x",
+	"ffi": "1.3.x",
+	"ref": "1.0.x",
+	"ref-array": "1.1.x",
+	"ref-struct": "1.0.x"
+  }
+}

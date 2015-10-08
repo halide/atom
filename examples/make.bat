@@ -1,0 +1,14 @@
+@echo off
+
+SETLOCAL
+set VCINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\
+set KITSDIR=C:\Program Files (x86)\Windows Kits\8.1\
+
+set INCLUDE=%VCINSTALLDIR%INCLUDE;%VCINSTALLDIR%ATLMFC\INCLUDE;%KITSDIR%include\shared;%KITSDIR%include\um;
+set LIBPATH=%VCINSTALLDIR%LIB;%VCINSTALLDIR%ATLMFC\LIB;
+set LIB=%VCINSTALLDIR%LIB;%VCINSTALLDIR%ATLMFC\LIB;%KITSDIR%lib\winv6.3\um\x86;
+
+set Path=%VCINSTALLDIR%BIN;%Path%
+
+nmake /f NMakefile %*
+ENDLOCAL
