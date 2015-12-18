@@ -18,9 +18,6 @@ Prerequisites:
 * A C++ build toolchain: Xcode on the Mac, Visual Studio on Windows, make and g++ on Linux, etc.
 * A [binary distribution of Halide][halide-release] or a compatible version [built from source][halide-git].
 * A working version of Python (used by node-gyp to install native node modules via Atom's package manager). I used 32-bit Python 2.7.10 from [python.org][python].
-
-Special Note for those on Mac OS X using Xcode 7. As of this writing, the most recently posted Halide binary distribution (Sept 11) has a [crashing bug][bug] that was [fixed][bugfix] on the 25th. Until there's a new release including that fix, you'll have to build from source.
-
 * Clone this git repo.
 
     On Mac and Linux, you can put it anywhere and run setup.sh to symlink it in as a local Atom package and run apm install to fetch and build the native modules.
@@ -57,9 +54,8 @@ Since the FFI runs the render function synchronously in process, you can hang or
 These and a few others are also noted in the [TODO list](TODO.txt).
 
 [atom]: https://atom.io
+[demo]: https://www.youtube.com/watch?v=PTSVlT3Iq4U
 [halide]: http://halide-lang.org/
 [halide-git]: https://github.com/halide/Halide
 [halide-release]: https://github.com/halide/Halide/releases
 [python]: https://www.python.org
-[bug]: https://github.com/halide/Halide/issues/936
-[bugfix]: https://github.com/halide/Halide/commit/46bb4d8190dfe11a5b3e818ef149f3785ae4d43d
