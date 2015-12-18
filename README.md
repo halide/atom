@@ -1,6 +1,6 @@
 # atomic-halide package
 
-An Atom editor package for rapid development of simple Halide imaging language pipelines.
+An Atom editor package for rapid development of simple Halide imaging language pipelines. See [this demo][demo] to see it in action.
 
 Purpose
 -------
