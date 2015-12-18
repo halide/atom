@@ -15,8 +15,8 @@
   },
   "dependencies": {
 	"q": "1.4.x",
-	"ffi": "1.3.x",
-	"ref": "1.0.x",
+	"ffi": "2.0.x",
+	"ref": "1.3.x",
 	"ref-array": "1.1.x",
 	"ref-struct": "1.0.x"
   }
