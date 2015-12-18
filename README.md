@@ -14,10 +14,10 @@ Installation/Setup
 ------------------
 
 Prerequisites:
-* A copy of [Github's Atom Editor][atom].
-* A C++ build toolchain: Xcode on the Mac, Visual Studio on Windows, make and g++ on Linux, etc.
+* A copy of [Github's Atom Editor][atom] (most recently tested with 1.3.2).
+* A C++ build toolchain: Xcode on the Mac, Visual Studio on Windows, make and g++ on Linux.
 * A [binary distribution of Halide][halide-release] or a compatible version [built from source][halide-git].
-* A working version of Python (used by node-gyp to install native node modules via Atom's package manager). I used 32-bit Python 2.7.10 from [python.org][python].
+* A working version of Python (used by node-gyp to install native node modules via Atom's package manager). I used 32-bit Python 2.7.10 from [python.org][python] on Windows.
 * Clone this git repo.
 
     On Mac and Linux, you can put it anywhere and run setup.sh to symlink it in as a local Atom package and run apm install to fetch and build the native modules.
@@ -45,7 +45,7 @@ Special thanks go out to those who've contributed to Halide itself. It's a reall
 
 Caveats
 -------
-Most of the work on this package was done on a Mac. I did get it working on Windows as well, but I haven't exposed the required toolchain paths as configuration, so a different version of Visual Studio and the Windows SDK probably requires a slight tweak to a few constants in the [package source code](lib/winenv.coffee) right now. It also tested it on Ubuntu 14.04 and got that working.
+Most of the work on this package was done on a Mac. I did get it working on Windows as well, but I haven't exposed the required toolchain paths as configuration, so a different version of Visual Studio and the Windows SDK probably requires a slight tweak to a few constants in the [package source code](lib/winenv.coffee) right now. It has also been tested on Ubuntu 14.04 and works there.
 
 Also, the package does nothing to set up the build toolchain (make, a C++ compiler, etc). It assumes it can shell out to make or nmake and that those in turn can determine the correct compiler to use.
 
