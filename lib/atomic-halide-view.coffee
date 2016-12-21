@@ -3,6 +3,8 @@
 
 {TextEditor} = require 'atom'
 
+dialog = require('electron').remote.dialog
+
 path = require 'path'
 url = require 'url'
 
@@ -118,7 +120,6 @@ class AtomicHalideView
     window.addEventListener 'resize', @resizeListener
 
   configurePressed: ->
-    dialog = require("remote").require("dialog")
     paths = dialog.showOpenDialog
       title: "Choose Halide Folder"
       properties: ['openDirectory']
@@ -232,7 +233,6 @@ class AtomicHalideView
     choose.appendChild(document.createTextNode "...")
     choose.style.float = 'right'
     choose.onclick = ->
-      dialog = require("remote").require("dialog")
       paths = dialog.showOpenDialog
         title: "Choose Input Image"
         properties: ['openFile']
