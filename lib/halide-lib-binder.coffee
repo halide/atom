@@ -254,8 +254,9 @@ class LibBinder
     @renderLibrary = ffi.DynamicLibrary( libpath, DLFLAGS.RTLD_NOW )
     rawfn = @renderLibrary.get fnname
 
-    struct = @renderLibrary.get fnname + "_metadata"
-    struct = struct.reinterpret(HalideFilterMetadata.size)
+    rawmetafn = @renderLibrary.get fnname + "_metadata"
+    metafn = ffi.ForeignFunction rawmetafn, ref.refType(HalideFilterMetadata), []
+    struct= metafn().deref()
     metadata = new HalideFilterMetadata(struct)
 
     if metadata.version != 0
