@@ -7,23 +7,32 @@ ref = require 'ref'
 struct = require 'ref-struct'
 ArrayType = require 'ref-array'
 
+HalideType = struct
+  code: 'uint8'
+  bits: 'uint8'
+  lanes: 'uint16'
+
+HalideDimension = struct
+  min: 'int32'
+  extent: 'int32'
+  stride: 'int32'
+  flags: 'uint32'
+
 HalideBuffer = struct
   dev: 'uint64',
+  device_interface: ref.refType('void')
   host: ref.refType('uint8')
-  extent: ArrayType('uint32', 4)
-  stride: ArrayType('uint32', 4)
-  min: ArrayType('uint32', 4)
-  elem_size: 'uint32'
-  #only used by GPU, but may need special alignment tweaks
-  host_dirty: 'bool'
-  dev_dirty: 'bool'
+  flags: 'uint64'
+  type: HalideType
+  dimensions: 'int32'
+  dimension: ArrayType(HalideDimension)
+  padding: ref.refType('void')
 
 HalideFilterArgument = struct
   name: 'string'
   kind: 'int32'
   dimensions: 'int32'
-  type_code: 'int32'
-  type_bits: 'int32'
+  type: HalideType
   def: ref.refType('void')
   min: ref.refType('void')
   max: ref.refType('void')
@@ -45,20 +54,31 @@ makeBuffer = (width, height, channels) ->
   nbuf = new Buffer(width * height * channels)
 
   hbuf.dev = 0
+  hbuf.device_interface = null
   hbuf.elem_size = 1
   hbuf.host = nbuf
-  hbuf.min[0] = 0
-  hbuf.min[1] = 0
-  hbuf.min[2] = 0
-  hbuf.min[3] = 0
-  hbuf.extent[0] = width
-  hbuf.extent[1] = height
-  hbuf.extent[2] = channels
-  hbuf.extent[3] = 0
-  hbuf.stride[0] = 1
-  hbuf.stride[1] = width
-  hbuf.stride[2] = width * height
-  hbuf.stride[3] = 0
+  hbuf.flags = 0
+  hbuf.type = new HalideType()
+  hbuf.type.code = 1
+  hbuf.type.bits = 8
+  hbuf.type.lanes = 1
+  hbuf.dimensions = 3
+
+  hbuf.dimension = [new HalideDimension(), new HalideDimension(), new HalideDimension()]
+  hbuf.dimension[0].min = 0
+  hbuf.dimension[0].extent = width
+  hbuf.dimension[0].stride = 1
+  hbuf.dimension[0].flags = 0
+
+  hbuf.dimension[1].min = 0
+  hbuf.dimension[1].extent = height
+  hbuf.dimension[1].stride = width
+  hbuf.dimension[1].flags = 0
+
+  hbuf.dimension[2].min = 0
+  hbuf.dimension[2].extent = channels
+  hbuf.dimension[2].stride = width * height
+  hbuf.dimension[2].flags = 0
 
   [ hbuf, nbuf ]
 
@@ -73,10 +93,10 @@ class InputBuffer
     @buffer.ref()
 
   width: ->
-    @buffer.stride[1]
+    @buffer.dimension[1].stride
 
   plane: ->
-    @buffer.stride[2]
+    @buffer.dimension[2].stride
 
   fillWithCheckerboard: (size) ->
     width = @width()
@@ -154,13 +174,13 @@ makeDereferencer = (type, bits) ->
       buf.reinterpret(bits/8)[reader]()
 
 convertArgumentStruct = (ma) ->
-  type = type_code_names[ma.type_code]
+  type = type_code_names[ma.type.code]
 
   name: ma.name
   dimensions: ma.dimensions
   kind: kind_names[ma.kind]
   type: type
-  bits: ma.type_bits
+  bits: ma.type.bits
   is_int: type == "uint" || type == "int"
 
 gatherParams = (args, nargs) ->
@@ -187,12 +207,12 @@ gatherParams = (args, nargs) ->
         params.push "float"
       else if ma.type == "float" && ma.bits == 64
         params.push "double"
-      else if ma.type == "uint" && ma.bits == 1
+      else if (ma.type == "uint" || ma.type == "int") && ma.bits == 1
         params.push "bool"
       else if ma.is_int && ma.bits > 0 && ma.bits % 8 == 0
         params.push ma.type + ma.bits
       else
-        throw new Error("Unhandled type: " + ma.type + ma.bits)
+        throw new Error("Unhandled type: " + ma.type + " " + ma.bits)
     else
       throw new Error("Unhandled kind: " + ma.kind + " type: " + ma.type +
         " with " + ma.bits +  " bits and " + ma.dimensions + " dimensions")
